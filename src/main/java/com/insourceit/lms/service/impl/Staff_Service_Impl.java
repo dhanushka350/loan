@@ -1,0 +1,212 @@
+package com.insourceit.lms.service.impl;
+
+import com.insourceit.lms.controller.rest.System_User;
+import com.insourceit.lms.dto.BorrowerDto;
+import com.insourceit.lms.dto.ResponseDto;
+import com.insourceit.lms.dto.UserLogin;
+import com.insourceit.lms.modal.Borrower;
+import com.insourceit.lms.modal.User;
+import com.insourceit.lms.repository.BorrowerRepository;
+import com.insourceit.lms.repository.RoleRepository;
+import com.insourceit.lms.repository.UserRepository;
+import com.insourceit.lms.service.Staff_Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+@Service
+public class Staff_Service_Impl implements Staff_Service {
+
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private BorrowerRepository borrowerRepository;
+
+    private static final Logger LOG = LoggerFactory.getLogger(Staff_Service_Impl.class);
+
+
+    @Override
+    public String userLogin(UserLogin login) {
+        Date date = new Date();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        LOG.info("[APP-STAFF-SERVICE-LOGIN] - check login details - " + dateFormat.format(date));
+        User user = userRepository.findByNameEqualsAndPasswordEquals(login.getName(), login.getPassword());
+        String returnVal = "error";
+
+        if (user == null) {
+            return "wrong entry";
+        } else {
+
+            if (user.getRole().getRole().equalsIgnoreCase("ADMIN")) {
+
+                if (user.getActive().equalsIgnoreCase("INACTIVE")) {
+                    returnVal = "/admin_dash";
+                    LOG.info("[APP-STAFF-SERVICE-LOGIN] - admin " + user.getName() + " logged in.. ");
+                    user.setLast_login(dateFormat.format(date));
+                    user.setActive("ACTIVE");
+                    userRepository.saveAndFlush(user);
+                    LOG.info("[APP-STAFF-SERVICE-LOGIN] - last login and status updated. ");
+                } else {
+                    returnVal = "already in";
+                    LOG.warn("[APP-STAFF-SERVICE-LOGIN] - admin " + user.getName() + " already logged in. ");
+                }
+
+            } else if (user.getRole().getRole().equalsIgnoreCase("AGENT")) {
+                if (user.getActive().equalsIgnoreCase("INACTIVE")) {
+                    returnVal = "/admin_dash";
+                    LOG.info("[APP-STAFF-SERVICE-LOGIN] - staff member " + user.getName() + " logged in");
+                    user.setLast_login(dateFormat.format(date));
+                    user.setActive("ACTIVE");
+                    userRepository.saveAndFlush(user);
+                    LOG.info("[APP-STAFF-SERVICE-LOGIN] - last login and status updated.");
+                } else {
+                    returnVal = "already in";
+                    LOG.warn("[APP-STAFF-SERVICE-LOGIN] - staff member " + user.getName() + " already logged in. ");
+                }
+            }
+
+            return returnVal;
+        }
+    }
+
+    @Override
+    public boolean userLogout(String name) {
+        LOG.info("[APP-STAFF-SERVICE] - logging out user - " + name);
+        User user = userRepository.findByNameEquals(name);
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+        user.setLast_logout(dateFormat.format(date));
+        user.setActive("INACTIVE");
+        userRepository.saveAndFlush(user);
+        LOG.info("[APP-STAFF-SERVICE] - successfully logged out");
+        return true;
+    }
+
+
+    // borrower registration
+    @Override
+    public ResponseDto saveBorrower(BorrowerDto borrowerDto) {
+        LOG.info("[APP-STAFF-SERVICE-SAVE BORROWER] - Received borrower named - " + borrowerDto.getFname());
+        ResponseDto responseDto = new ResponseDto();
+        Borrower borrower = borrowerRepository.saveAndFlush(setBorrowerModal(borrowerDto));
+        if (borrower != null) {
+            responseDto.setStatus(1);
+            responseDto.setMessage("Registration Successful");
+            LOG.info("[APP-STAFF-SERVICE-SAVE BORROWER] - Registration Success..");
+        } else {
+            responseDto.setStatus(0);
+            responseDto.setMessage("Registration Failed..");
+            LOG.info("[APP-STAFF-SERVICE-SAVE BORROWER] - Registration Failed..");
+        }
+        return responseDto;
+    }
+
+    @Override
+    public List<BorrowerDto> allBorrowers() {
+        LOG.info("[APP-STAFF-SERVICE-SAVE BORROWERS] - getting all borrowers");
+        return makeBorrowerListDto(borrowerRepository.findAll());
+    }
+
+    @Override
+    public List<String> allUsers() {
+        LOG.info("[APP-STAFF-SERVICE-STAFF LIST] - getting all staff members");
+        List<String> list = new ArrayList<>();
+        for (User user : userRepository.findAll()) {
+            list.add(user.getName());
+        }
+        LOG.info("[APP-STAFF-SERVICE-STAFF LIST] - return all staff members");
+        return list;
+    }
+
+    @Override
+    public BorrowerDto checkBorrowerID(String id) {
+        BorrowerDto dto = null;
+        Borrower borrower = borrowerRepository.getByUniqueID(id);
+        if (borrower != null) {
+            dto = new BorrowerDto();
+            dto.setWorkstatus(borrower.getWorkstatus());
+            dto.setTitle(borrower.getTitle());
+            dto.setProvince(borrower.getProvince());
+            dto.setMobile(borrower.getMobile());
+            dto.setLname(borrower.getLname());
+            dto.setLandphone(borrower.getLandphone());
+            dto.setGender(borrower.getGender());
+            dto.setFname(borrower.getFname());
+            dto.setEmail(borrower.getEmail());
+            dto.setDescription(borrower.getDescription());
+            dto.setCity(borrower.getCity());
+            dto.setBusiness(borrower.getBusiness());
+            dto.setAddress(borrower.getAddress());
+        }
+        return dto;
+    }
+
+    private Borrower setBorrowerModal(BorrowerDto borrowerDto) {
+        LOG.info("[APP-STAFF-SERVICE-SAVE BORROWER] - setting model for registration");
+        Borrower borrower = borrowerRepository.getByUniqueID(borrowerDto.getUniqueID());
+        if (borrower == null) {
+            borrower = new Borrower();
+            LOG.info("[APP-STAFF-SERVICE-SAVE BORROWER] - new borrower");
+        } else {
+            LOG.info("[APP-STAFF-SERVICE-SAVE BORROWER] - existing borrower found");
+        }
+
+        borrower.setAddress(borrowerDto.getAddress());
+        borrower.setBusiness(borrowerDto.getBusiness());
+        borrower.setCity(borrowerDto.getCity());
+        borrower.setDescription(borrowerDto.getDescription());
+        borrower.setEmail(borrowerDto.getEmail());
+        borrower.setFiles(borrowerDto.getFiles());
+        borrower.setFname(borrowerDto.getFname());
+        borrower.setGender(borrowerDto.getGender());
+        borrower.setLandphone(borrowerDto.getLandphone());
+        borrower.setLname(borrowerDto.getLname());
+        borrower.setMobile(borrowerDto.getMobile());
+        borrower.setProvince(borrowerDto.getProvince());
+        borrower.setRegdate(borrowerDto.getRegdate());
+        borrower.setTitle(borrowerDto.getTitle());
+        borrower.setUniqueID(borrowerDto.getUniqueID());
+        borrower.setWorkstatus(borrowerDto.getWorkstatus());
+        borrower.setRegisteredby(userRepository.findByNameEquals(borrowerDto.getRegisteredby()));
+        LOG.info("[APP-STAFF-SERVICE-SAVE BORROWER] - returning model..");
+        return borrower;
+    }
+
+    private List<BorrowerDto> makeBorrowerListDto(List<Borrower> list) {
+        LOG.info("[APP-STAFF-SERVICE-LIST BORROWERS] - setting dto list");
+        List<BorrowerDto> borrowerDtoList = new ArrayList<>();
+        BorrowerDto dto = null;
+        int count = 0;
+        for (Borrower borrower : list) {
+            dto = new BorrowerDto();
+            dto.setAddress(borrower.getAddress());
+            dto.setBusiness(borrower.getBusiness());
+            dto.setCity(borrower.getCity());
+            dto.setDescription(borrower.getDescription());
+            dto.setEmail(borrower.getEmail());
+            dto.setFiles(borrower.getFiles());
+            dto.setFname(borrower.getFname());
+            dto.setGender(borrower.getGender());
+            dto.setLandphone(borrower.getLandphone());
+            dto.setLname(borrower.getLname());
+            dto.setMobile(borrower.getMobile());
+            dto.setProvince(borrower.getProvince());
+            dto.setRegdate(borrower.getRegdate());
+            dto.setRegisteredby(borrower.getRegisteredby().getName());
+            dto.setUniqueID(borrower.getUniqueID());
+            dto.setTitle(borrower.getTitle());
+            dto.setWorkstatus(borrower.getWorkstatus());
+            borrowerDtoList.add(dto);
+            count++;
+        }
+        LOG.info("[APP-STAFF-SERVICE-LIST BORROWERS] - returning dto list.. found " + count + " records.");
+        return borrowerDtoList;
+    }
+}
