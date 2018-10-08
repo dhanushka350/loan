@@ -53,7 +53,7 @@
     <div class="page-content">
 
         <!-- Main sidebar -->
-            <jsp:include page="common/left_nav.jsp"/>
+        <jsp:include page="common/left_nav.jsp"/>
         <!-- /main sidebar -->
 
         <!-- Main content -->
@@ -134,11 +134,20 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-lg-3">Business Name <span
-                                        class="text-danger">*</span></label>
+                                <label class="control-label col-lg-3">Business Name</label>
                                 <div class="col-lg-9">
                                     <input type="text" name="basic" class="form-control" required="required"
                                            placeholder="Business Name" id="business">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-lg-3">Group <span
+                                        class="text-danger">*</span></label>
+                                <div class="col-lg-9">
+                                    <select name="default_select" class="form-control" required="required"
+                                            id="borrower_group" onchange="">
+                                        <option value="0">Select Borrower Group</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -188,29 +197,19 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-lg-3">Land line Phone <span
-                                        class="text-danger">*</span></label>
+                                <label class="control-label col-lg-3">Land line Phone </label>
                                 <div class="col-lg-9">
                                     <input type="text" name="digits" class="form-control"
                                            placeholder="Landline Phone" id="land_phone">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-lg-3">Email <span
-                                        class="text-danger">*</span></label>
+                                <label class="control-label col-lg-3">Email </label>
                                 <div class="col-lg-9">
                                     <input type="email" name="email" class="form-control" id="email" required="required"
                                            placeholder="Notifications and reminders will send to this email address">
                                 </div>
                             </div>
-                            <%--<div class="form-group">--%>
-                            <%--<label class="control-label col-lg-3">Date of Birth <span--%>
-                            <%--class="text-danger">*</span></label>--%>
-                            <%--<div class="col-lg-9">--%>
-                            <%--<input type="text" name="date_iso" class="form-control"--%>
-                            <%--placeholder="YYYY/MM/DD or any other ISO date format" id="dob">--%>
-                            <%--</div>--%>
-                            <%--</div>--%>
                             <div class="form-group">
                                 <label class="control-label col-lg-3">Address <span
                                         class="text-danger">*</span></label>
@@ -251,21 +250,20 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-lg-3">Description <span
-                                        class="text-danger">*</span></label>
+                                <label class="control-label col-lg-3">Description </label>
                                 <div class="col-lg-9">
                                     <textarea rows="5" cols="5" name="textarea" class="form-control"
                                               placeholder="Description" id="desc"></textarea>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="control-label col-lg-3">Borrower Files <span
-                                        class="text-danger">(disabled)</span></label>
-                                <div class="col-lg-9" style="cursor: wait">
-                                    <input type="file" name="styled_file" class="file-styled"
-                                           id="borrower_files" disabled="disabled" placeholder="inactive">
-                                </div>
-                            </div>
+                            <%--<div class="form-group">--%>
+                            <%--<label class="control-label col-lg-3">Borrower Files <span--%>
+                            <%--class="text-danger">(disabled)</span></label>--%>
+                            <%--<div class="col-lg-9" style="cursor: wait">--%>
+                            <%--<input type="file" name="styled_file" class="file-styled"--%>
+                            <%--id="borrower_files" disabled="disabled" placeholder="inactive">--%>
+                            <%--</div>--%>
+                            <%--</div>--%>
                             <legend class="text-bold"></legend>
                         </fieldset>
                     </form>

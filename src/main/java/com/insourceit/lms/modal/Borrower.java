@@ -53,6 +53,10 @@ public class Borrower implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "t_borrower_registered_by")
     private User registeredby;
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "t_group")
+    private MemberGroup group;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "borrower", fetch = FetchType.LAZY)
     private List<Loan> borrowedLoans = new ArrayList<>();
@@ -61,7 +65,7 @@ public class Borrower implements Serializable {
     public Borrower() {
     }
 
-    public Borrower(String uniqueID, String fname, String lname, String business, String gender, String title, String mobile, String landphone, String email, String regdate, String address, String city, String province, String workstatus, String description, String files, User registeredby, List<Loan> borrowedLoans) {
+    public Borrower(String uniqueID, String fname, String lname, String business, String gender, String title, String mobile, String landphone, String email, String regdate, String address, String city, String province, String workstatus, String description, String files, User registeredby, MemberGroup group, List<Loan> borrowedLoans) {
         this.uniqueID = uniqueID;
         this.fname = fname;
         this.lname = lname;
@@ -79,6 +83,7 @@ public class Borrower implements Serializable {
         this.description = description;
         this.files = files;
         this.registeredby = registeredby;
+        this.group = group;
         this.borrowedLoans = borrowedLoans;
     }
 
@@ -234,6 +239,14 @@ public class Borrower implements Serializable {
         this.borrowedLoans = borrowedLoans;
     }
 
+    public MemberGroup getGroup() {
+        return group;
+    }
+
+    public void setGroup(MemberGroup group) {
+        this.group = group;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Borrower{");
@@ -255,6 +268,7 @@ public class Borrower implements Serializable {
         sb.append(", description='").append(description).append('\'');
         sb.append(", files='").append(files).append('\'');
         sb.append(", registeredby=").append(registeredby);
+        sb.append(", group=").append(group);
         sb.append(", borrowedLoans=").append(borrowedLoans);
         sb.append('}');
         return sb.toString();

@@ -52,10 +52,10 @@
                         <ul>
                             <li><a href="/view_borrowers">View Borrowers</a></li>
                             <li><a href="/add_borrowers">Add Borrower</a></li>
-                            <%--<li><a href="/error/offline">View Borrower Group</a></li>--%>
-                            <%--<li><a href="/error/offline">Add Borrower Group</a></li>--%>
-                            <%--<li><a href="/error/offline">Send SMS to All Borrowers</a></li>--%>
-                            <%--<li><a href="/error/offline">Send Email to All Borrowers</a></li>--%>
+                            <li><a href="/borrower_group">View Borrower Group</a></li>
+                            <li><a href="/group_registration">Add Borrower Group</a></li>
+                            <li><a href="/error/offline">Send SMS to All Borrowers</a></li>
+                            <li><a href="/error/offline">Send Email to All Borrowers</a></li>
                             </li>
                         </ul>
                     </li>
@@ -64,8 +64,8 @@
                         <ul>
                             <li><a href="/view_loans">View All Loans</a></li>
                             <li><a href="/add_loan">Add Loan</a></li>
-                            <%--<li><a href="/error/offline">Due Loans</a></li>--%>
-                            <%--<li><a href="/error/offline">Missed Payments</a></li>--%>
+                            <li><a href="/view_loan_history">View Loan History</a></li>
+                            <li><a href="/approve_loans">Pending Loans</a></li>
                             <%--<li><a href="/error/offline">Loans in Arrears</a></li>--%>
                             <%--<li><a href="/error/offline">No Repayments</a></li>--%>
                             <%--<li><a href="/error/offline">Past Maturity Date</a></li>--%>
@@ -92,7 +92,7 @@
                         </ul>
                     </li>
                     <%--<li><a href="/admin_dash"><i class="icon-list"></i>--%>
-                        <%--<span>Collateral Register</span></a>--%>
+                    <%--<span>Collateral Register</span></a>--%>
                     <%--</li>--%>
                     <li><a href="/admin_dash"><i class="icon-calendar"></i>
                         <span>Calendar</span></a>

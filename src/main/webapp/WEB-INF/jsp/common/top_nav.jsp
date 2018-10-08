@@ -7,7 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-<div class="navbar navbar-inverse" style="position: fixed;z-index: 0;">
+<div class="navbar navbar-inverse">
     <div class="navbar-header">
         <a class="navbar-brand" style="font-weight: bold;color: whitesmoke; text-align: center">InSource IT
             Production</a>

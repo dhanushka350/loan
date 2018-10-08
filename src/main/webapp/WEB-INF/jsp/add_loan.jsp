@@ -58,7 +58,7 @@
     <div class="page-content">
 
         <!-- Main sidebar -->
-            <jsp:include page="common/left_nav.jsp"/>
+        <jsp:include page="common/left_nav.jsp"/>
         <!-- /main sidebar -->
 
         <!-- Main content -->
@@ -154,63 +154,34 @@
                                            disabled="disabled">
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="control-label col-lg-3">Disbursed By </label>
-                                <div class="col-lg-9">
-                                    <select name="default_select" class="form-control" required="required" id="disbursed">
-                                        <option value="Cash">Cash</option>
-                                        <option value="Cheque">Cheque</option>
-                                        <option value="Wire_Transfer">Wire Transfer</option>
-                                        <option value="Online_Transfer">Online Transfer</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-lg-3">Loan Release Date</label>
-                                <div class="col-lg-9">
-                                    <input class="form-control" type="date" name="date" id="date">
-                                </div>
-                            </div>
+                            <%--<div class="form-group">--%>
+                                <%--<label class="control-label col-lg-3">Disbursed By </label>--%>
+                                <%--<div class="col-lg-9">--%>
+                                    <%--<select name="default_select" class="form-control" required="required"--%>
+                                            <%--id="disbursed">--%>
+                                        <%--<option value="Cash">Cash</option>--%>
+                                        <%--<option value="Cheque">Cheque</option>--%>
+                                        <%--<option value="Wire_Transfer">Wire Transfer</option>--%>
+                                        <%--<option value="Online_Transfer">Online Transfer</option>--%>
+                                    <%--</select>--%>
+                                <%--</div>--%>
+                            <%--</div>--%>
+                            <%--<div class="form-group" id="dates" style="border-color: red;">--%>
 
-                            <div class="form-group">
-                                <label class="control-label col-lg-3">Repayment Cycle </label>
-                                <div class="col-lg-9">
-                                    <input type="text" id="repayment_cycle" name="digits"
-                                           class="form-control col-lg-12" disabled="disabled"
-                                           placeholder="Default selected Weekly Payments"
-                                           style="text-align: center;font-weight: bold;color: black;">
-                                </div>
-                            </div>
-                            <div class="form-group" id="dates" style="border-color: red;">
-
-                            </div>
-                            <legend class="text-bold">Loan Status :</legend>
-                            <div class="form-group">
-                                <label class="control-label col-lg-3">Loan Status</label>
-                                <div class="col-lg-9">
-                                    <select name="default_select" class="form-control" required="required" id="status">
-                                        <option value="Processing">Processing</option>
-                                        <option value="Open">Open</option>
-                                        <option value="Denied">Denied</option>
-                                        <option value="NTU">Not Taken Up</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <legend class="text-bold">Other (optional) :</legend>
-                            <div class="form-group">
-                                <label class="control-label col-lg-3">Select Guarantors</label>
-                                <div class="col-lg-9">
-                                    <select name="default_select" class="form-control" disabled="disabled">
-                                        <option value="">Not Allow For This Version</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-lg-3">Loan Files (disabled)</label>
-                                <div class="col-lg-9">
-                                    <input type="file" name="styled_file" class="file-styled" disabled="disabled">
-                                </div>
-                            </div>
+                            <%--</div>--%>
+                            <%--<legend class="text-bold">Loan Status :</legend>--%>
+                            <%--<div class="form-group">--%>
+                                <%--<label class="control-label col-lg-3">Loan Status</label>--%>
+                                <%--<div class="col-lg-9">--%>
+                                    <%--<select name="default_select" class="form-control" required="required" id="status">--%>
+                                        <%--<option value="Processing">Processing</option>--%>
+                                        <%--<option value="Open">Approved</option>--%>
+                                        <%--<option value="Denied">Denied</option>--%>
+                                        <%--<option value="NTU">Not Taken Up</option>--%>
+                                    <%--</select>--%>
+                                <%--</div>--%>
+                            <%--</div>--%>
+                            <%--<legend class="text-bold">Other (optional) :</legend>--%>
                             <div class="form-group">
                                 <label class="control-label col-lg-3">Description</label>
                                 <div class="col-lg-9">
@@ -223,7 +194,7 @@
                         <div class="text-right">
                             <button type="reset" class="btn btn-default" id="reset">Reset <i
                                     class="icon-reload-alt position-right"></i></button>
-                            <button type="button" class="btn btn-primary" id="saveLoan">Submit <i
+                            <button type="button" class="btn btn-primary" id="saveLoan">Send for approvel <i
                                     class="icon-arrow-right14 position-right"></i></button>
                         </div>
                     </form>

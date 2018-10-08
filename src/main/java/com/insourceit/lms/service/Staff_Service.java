@@ -1,6 +1,7 @@
 package com.insourceit.lms.service;
 
 import com.insourceit.lms.dto.BorrowerDto;
+import com.insourceit.lms.dto.MemberGroupDto;
 import com.insourceit.lms.dto.ResponseDto;
 import com.insourceit.lms.dto.UserLogin;
 import org.springframework.stereotype.Service;
@@ -20,4 +21,6 @@ public interface Staff_Service {
     public List<String> allUsers();
 
     public BorrowerDto checkBorrowerID(String id);
+
+    public ResponseDto saveMemberGroup(MemberGroupDto dto);
 }

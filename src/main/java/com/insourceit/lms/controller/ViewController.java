@@ -42,6 +42,18 @@ public class ViewController {
         return new ModelAndView("add_borrower");
     }
 
+    @GetMapping(value = "/borrower_group")
+    @ResponseBody
+    public ModelAndView Borrower_group() {
+        return new ModelAndView("Borrower_Group");
+    }
+
+    @GetMapping(value = "/group_registration")
+    @ResponseBody
+    public ModelAndView add_Borrower_group() {
+        return new ModelAndView("add_group");
+    }
+
 
     // Loans
     @GetMapping(value = "/add_loan")
@@ -54,6 +66,18 @@ public class ViewController {
     @ResponseBody
     public ModelAndView view_Loan() {
         return new ModelAndView("view_loans");
+    }
+
+    @GetMapping(value = "/view_loan_history")
+    @ResponseBody
+    public ModelAndView view_Loan_history() {
+        return new ModelAndView("loan_history");
+    }
+
+    @GetMapping(value = "/approve_loans")
+    @ResponseBody
+    public ModelAndView approve_loans() {
+        return new ModelAndView("approve_loans");
     }
 
 

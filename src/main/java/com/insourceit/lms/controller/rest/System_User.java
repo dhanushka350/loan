@@ -1,6 +1,7 @@
 package com.insourceit.lms.controller.rest;
 
-import com.insourceit.lms.dto.BorrowerDto;
+import com.insourceit.lms.dto.MemberGroupDto;
+import com.insourceit.lms.dto.ResponseDto;
 import com.insourceit.lms.dto.UserLogin;
 import com.insourceit.lms.service.Staff_Service;
 import org.slf4j.Logger;
@@ -45,5 +46,13 @@ public class System_User {
     private List<String> staffList() {
         LOG.info("[APP-API-REST-CONTROLLER-STAFF-LIST]");
         return userService.allUsers();
+    }
+
+    // member groups
+    @RequestMapping(value = {"/register_member_groups"}, method = RequestMethod.POST)
+    @ResponseBody
+    private ResponseDto userLogout(@RequestBody MemberGroupDto dto) {
+        LOG.info("[APP-API-REST-CONTROLLER-MEMBER-GROUPS-REGISTRATION] - data received - " + dto.getName());
+        return userService.saveMemberGroup(dto);
     }
 }

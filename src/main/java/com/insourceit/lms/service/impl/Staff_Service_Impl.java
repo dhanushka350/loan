@@ -2,11 +2,14 @@ package com.insourceit.lms.service.impl;
 
 import com.insourceit.lms.controller.rest.System_User;
 import com.insourceit.lms.dto.BorrowerDto;
+import com.insourceit.lms.dto.MemberGroupDto;
 import com.insourceit.lms.dto.ResponseDto;
 import com.insourceit.lms.dto.UserLogin;
 import com.insourceit.lms.modal.Borrower;
+import com.insourceit.lms.modal.MemberGroup;
 import com.insourceit.lms.modal.User;
 import com.insourceit.lms.repository.BorrowerRepository;
+import com.insourceit.lms.repository.MemberGroupRepository;
 import com.insourceit.lms.repository.RoleRepository;
 import com.insourceit.lms.repository.UserRepository;
 import com.insourceit.lms.service.Staff_Service;
@@ -28,6 +31,8 @@ public class Staff_Service_Impl implements Staff_Service {
     private UserRepository userRepository;
     @Autowired
     private BorrowerRepository borrowerRepository;
+    @Autowired
+    private MemberGroupRepository groupRepository;
 
     private static final Logger LOG = LoggerFactory.getLogger(Staff_Service_Impl.class);
 
@@ -148,6 +153,34 @@ public class Staff_Service_Impl implements Staff_Service {
         return dto;
     }
 
+    @Override
+    public ResponseDto saveMemberGroup(MemberGroupDto dto) {
+        LOG.info("[APP-STAFF-SERVICE-MEMBER-GROUP-REGISTRATION] - Start group registration");
+        ResponseDto responseDto = new ResponseDto();
+        MemberGroup memberGroup = new MemberGroup();
+        Date date = new Date();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        memberGroup.setArea(dto.getArea());
+        memberGroup.setCollectionDay(dto.getCollectionDay());
+        memberGroup.setDescription(dto.getDescription());
+        memberGroup.setMemberCount(dto.getMemberCount());
+        memberGroup.setName(dto.getName() + "-" + dto.getArea());
+        memberGroup.setRergDate(dateFormat.format(date));
+        memberGroup.setUser(userRepository.findByNameEquals(dto.getCollector()));
+        MemberGroup save = groupRepository.save(memberGroup);
+        if (save != null) {
+            responseDto.setMessage("Successfully Registered");
+            responseDto.setStatus(0);
+            LOG.info("[APP-STAFF-SERVICE-MEMBER-GROUP-REGISTRATION] - Success");
+        } else {
+            responseDto.setMessage("Registration Failed.. \n Please Contact Developers..");
+            responseDto.setStatus(1);
+            LOG.info("[APP-STAFF-SERVICE-MEMBER-GROUP-REGISTRATION] - Failed");
+        }
+        LOG.info("[APP-STAFF-SERVICE-MEMBER-GROUP-REGISTRATION] - Stop group registration");
+        return responseDto;
+    }
+
     private Borrower setBorrowerModal(BorrowerDto borrowerDto) {
         LOG.info("[APP-STAFF-SERVICE-SAVE BORROWER] - setting model for registration");
         Borrower borrower = borrowerRepository.getByUniqueID(borrowerDto.getUniqueID());
@@ -175,6 +208,7 @@ public class Staff_Service_Impl implements Staff_Service {
         borrower.setUniqueID(borrowerDto.getUniqueID());
         borrower.setWorkstatus(borrowerDto.getWorkstatus());
         borrower.setRegisteredby(userRepository.findByNameEquals(borrowerDto.getRegisteredby()));
+        borrower.setGroup(groupRepository.getOne(borrowerDto.getGroup()));
         LOG.info("[APP-STAFF-SERVICE-SAVE BORROWER] - returning model..");
         return borrower;
     }

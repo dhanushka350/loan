@@ -21,11 +21,12 @@ public class BorrowerDto implements Serializable {
     private String description;
     private String files;
     private String registeredby;
+    private int group;
 
     public BorrowerDto() {
     }
 
-    public BorrowerDto(String uniqueID, String fname, String lname, String business, String gender, String title, String mobile, String landphone, String email, String regdate, String address, String city, String province, String workstatus, String description, String files, String registeredby) {
+    public BorrowerDto(String uniqueID, String fname, String lname, String business, String gender, String title, String mobile, String landphone, String email, String regdate, String address, String city, String province, String workstatus, String description, String files, String registeredby, int group) {
         this.uniqueID = uniqueID;
         this.fname = fname;
         this.lname = lname;
@@ -43,6 +44,15 @@ public class BorrowerDto implements Serializable {
         this.description = description;
         this.files = files;
         this.registeredby = registeredby;
+        this.group = group;
+    }
+
+    public int getGroup() {
+        return group;
+    }
+
+    public void setGroup(int group) {
+        this.group = group;
     }
 
     public String getUniqueID() {

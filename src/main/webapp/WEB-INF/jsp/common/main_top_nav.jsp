@@ -25,13 +25,13 @@
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <i class="icon-git-compare"></i>
-                    <span class="visible-xs-inline-block position-right">Git updates</span>
+                    <span class="visible-xs-inline-block position-right">System updates</span>
                     <span class="badge bg-warning-400">9</span>
                 </a>
 
                 <div class="dropdown-menu dropdown-content">
                     <div class="dropdown-content-heading">
-                        Git updates
+                        System updates
                         <ul class="icons-list">
                             <li><a href="#"><i class="icon-sync"></i></a></li>
                         </ul>
@@ -135,13 +135,13 @@
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <i class="icon-bubbles4"></i>
-                    <span class="visible-xs-inline-block position-right">Messages</span>
+                    <span class="visible-xs-inline-block position-right">Message From Developers</span>
                     <span class="badge bg-warning-400">2</span>
                 </a>
 
                 <div class="dropdown-menu dropdown-content width-350">
                     <div class="dropdown-content-heading">
-                        Messages
+                        Message From Developers
                         <ul class="icons-list">
                             <li><a href="#"><i class="icon-compose"></i></a></li>
                         </ul>
