@@ -1,23 +1,50 @@
 package com.insourceit.lms.dto;
 
 public class MemberGroupDto {
-    private int MGID;
+    private int mgid;
     private String name;
     private String area;
     private int memberCount;
     private String collector;
     private String collectionDay;
     private String description;
+    private String regBy;
+    private String status;
+    private String regDate;
 
     public MemberGroupDto() {
     }
 
+    public String getRegDate() {
+        return regDate;
+    }
+
+    public void setRegDate(String regDate) {
+        this.regDate = regDate;
+    }
+
+    public String getRegBy() {
+        return regBy;
+    }
+
+    public void setRegBy(String regBy) {
+        this.regBy = regBy;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public int getMGID() {
-        return MGID;
+        return mgid;
     }
 
     public void setMGID(int MGID) {
-        this.MGID = MGID;
+        this.mgid = MGID;
     }
 
     public String getName() {

@@ -1,6 +1,3 @@
-$(document).ready(function () {
-    $('#tbl_borrower').DataTable();
-});
 $('#submit_borrower').click(function (n) {
     n.preventDefault();
     BORROWER.addNewBorrower();
@@ -226,6 +223,43 @@ var BORROWER = {
                     $('#role').append($('<option>', {
                         value: data[i].id,
                         text: data[i].role
+                    }));
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                noty(
+                    {
+                        text: 'Error!\n can not load use roles \n refresh page and try again.',
+                        layout: 'topRight',
+                        type: 'error'
+                    }
+                );
+            },
+            beforeSend: function (xhr) {
+
+            }
+        });
+    },
+    allGroups: function () {
+        $.ajax({
+            url: "/api/rest/system_user/groupList",
+            dataType: 'json',
+            contentType: "application/json",
+            type: 'GET',
+            success: function (data, textStatus, jqXHR) {
+                if (data.length <= 0) {
+                    noty(
+                        {
+                            text: 'Please add some group !\n can not find any group in database.',
+                            layout: 'topRight',
+                            type: 'error'
+                        }
+                    );
+                }
+                for (var i = 0; i < data.length; i++) {
+                    $('#borrower_group').append($('<option>', {
+                        value: data[i].mgid,
+                        text: data[i].name
                     }));
                 }
             },

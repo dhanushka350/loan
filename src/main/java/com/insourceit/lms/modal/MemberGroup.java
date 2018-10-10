@@ -28,6 +28,13 @@ public class MemberGroup implements Serializable {
     @JoinColumn(name = "collector")
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reg_by")
+    private User regby;
+
+    @Column(name = "status")
+    private String status;
+
     @Column(name = "collection_day")
     private String collectionDay;
 
@@ -43,15 +50,33 @@ public class MemberGroup implements Serializable {
     public MemberGroup() {
     }
 
-    public MemberGroup(String name, String area, int memberCount, User user, String collectionDay, String description, String rergDate, List<Borrower> borrowers) {
+    public MemberGroup(String name, String area, int memberCount, User user, User regby, String status, String collectionDay, String description, String rergDate, List<Borrower> borrowers) {
         this.name = name;
         this.area = area;
         this.memberCount = memberCount;
         this.user = user;
+        this.regby = regby;
+        this.status = status;
         this.collectionDay = collectionDay;
         this.description = description;
         this.rergDate = rergDate;
         this.borrowers = borrowers;
+    }
+
+    public User getRegby() {
+        return regby;
+    }
+
+    public void setRegby(User regby) {
+        this.regby = regby;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public int getMGID() {
@@ -134,6 +159,8 @@ public class MemberGroup implements Serializable {
         sb.append(", area='").append(area).append('\'');
         sb.append(", memberCount=").append(memberCount);
         sb.append(", user=").append(user);
+        sb.append(", regby=").append(regby);
+        sb.append(", status='").append(status).append('\'');
         sb.append(", collectionDay='").append(collectionDay).append('\'');
         sb.append(", description='").append(description).append('\'');
         sb.append(", rergDate='").append(rergDate).append('\'');

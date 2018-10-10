@@ -230,7 +230,7 @@
             <li class="dropdown dropdown-user">
                 <a class="dropdown-toggle" data-toggle="dropdown">
                     <img src="assets/images/placeholder.jpg" alt="">
-                    <span>Victoria</span>
+                    <span id="user">USER</span>
                     <i class="caret"></i>
                 </a>
 
@@ -255,4 +255,11 @@
 <script type='text/javascript' src='noty/layouts/topLeft.js'></script>
 <script type='text/javascript' src='noty/layouts/topRight.js'></script>
 <script type='text/javascript' src='noty/themes/default.js'></script>
+<script type="text/javascript">
+    var name = $.session.get("Logged_User");
+    if (name === "undefined") {
+        window.location.replace("/");
+    }
+    document.getElementById("user").textContent = name;
+</script>
 </html>

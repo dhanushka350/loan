@@ -83,15 +83,17 @@
                             <thead>
                             <tr>
                                 <th style="font-size: small">Full Name</th>
-                                <th style="font-size: small">Unique#</th>
-                                <th style="font-size: small">Loan</th>
-                                <th style="font-size: small">Date</th>
-                                <th style="font-size: small">Submitted By</th>
-                                <th style="font-size: small">Action</th>
+                                <th style="font-size: small">Loan Type</th>
+                                <th style="font-size: small">Ratings</th>
+                                <th style="font-size: small">Submit By</th>
+                                <th style="font-size: small">Submit Date</th>
+                                <th style="font-size: small">Payment Method</th>
+                                <th style="font-size: small"></th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr style="height: 5px">
+                                <td style="font-size: small">Marth</td>
                                 <td style="font-size: small">Marth</td>
                                 <td style="font-size: small">Marth</td>
                                 <td style="font-size: small">Marth</td>
@@ -104,8 +106,17 @@
                                                 <i class="icon-menu9"></i>
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-right">
-                                                <li><a href="#"><i class="icon-eye" style="color: green"></i> Approve</a></li>
-                                                <li><a href="#"><i class="icon-pen" style="color: red"></i> Denied</a></li>
+                                                <li><a href="#" style="font-weight: bold"><i class="icon-eye"
+                                                                                             style="color: #002b36"></i>
+                                                    View Details</a></li>
+                                                <li><a href="#" style="font-weight: bold"><i class="icon-pen"
+                                                                                             style="color: green"></i>
+                                                    Approve</a></li>
+                                                <li><a href="#" style="font-weight: bold"><i class="icon-stop"
+                                                                                             style="color: darkred"></i>
+                                                    Disapprove</a></li>
+                                                </li>
+
                                             </ul>
                                         </li>
                                     </ul>

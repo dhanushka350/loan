@@ -55,4 +55,11 @@ public class System_User {
         LOG.info("[APP-API-REST-CONTROLLER-MEMBER-GROUPS-REGISTRATION] - data received - " + dto.getName());
         return userService.saveMemberGroup(dto);
     }
+
+    @RequestMapping(value = {"/groupList"}, method = RequestMethod.GET)
+    @ResponseBody
+    private List<MemberGroupDto> groupList() {
+        LOG.info("[APP-API-REST-CONTROLLER-STAFF-GROUP-LIST]");
+        return userService.allGroupList();
+    }
 }

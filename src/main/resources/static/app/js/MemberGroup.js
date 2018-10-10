@@ -44,6 +44,7 @@ var MEM_GROUP = {
     },
     addNewBorrowerGroup: function () {
 
+        // get values from drop down
         var a = document.getElementById("area");
         var area = a.options[a.selectedIndex].text;
 
@@ -56,6 +57,9 @@ var MEM_GROUP = {
         var d = document.getElementById("collection_day");
         var collection_day = d.options[d.selectedIndex].value;
 
+        var e = document.getElementById("status");
+        var status = e.options[e.selectedIndex].value;
+
         var e = {};
         e["name"] = $('#uniqueName').val();
         e["area"] = area;
@@ -63,6 +67,8 @@ var MEM_GROUP = {
         e["collector"] = group_collector;
         e["collectionDay"] = collection_day;
         e["description"] = $("#desc").val();
+        e["status"] = status;
+        e["regBy"] = $.session.get("Logged_User");
 
         var data = JSON.stringify(e);
         $.ajax({
@@ -78,7 +84,7 @@ var MEM_GROUP = {
                         layout: 'topRight',
                         type: 'success'
                     });
-                    
+
                 } else {
                     noty({
                         text: data.message,
@@ -105,5 +111,70 @@ var MEM_GROUP = {
                 });
             }
         });
-    }
+    },
+    allGroups: function () {
+        $('#tbl_borrower_group tbody tr td').remove(); // remove data
+
+        $.ajax({
+            url: "/api/rest/system_user/groupList",
+            dataType: 'json',
+            contentType: "application/json",
+            type: 'GET',
+            success: function (data, textStatus, jqXHR) {
+                if (data.length <= 0) {
+                    $('#tbl_borrower_group').append('<tr>\n\
+                               <td colspan=9><p align="center">No records found in your database\n\
+                               </p></td>\n\
+                               </tr>');
+                } else {
+
+                    for (var i = 0; i < data.length; i++) {
+
+                        var day = "";
+
+                        if (data[i].collectionDay === "1") {
+                            day = "Monday";
+                        } else if (data[i].collectionDay === "2") {
+                            day = "Tuesday";
+                        } else if (data[i].collectionDay === "3") {
+                            day = "Wednesday";
+                        } else if (data[i].collectionDay === "4") {
+                            day = "Thursday";
+                        } else if (data[i].collectionDay === "5") {
+                            day = "Friday";
+                        } else if (data[i].collectionDay === "6") {
+                            day = "Saturday";
+                        } else if (data[i].collectionDay === "7") {
+                            day = "Sunday";
+                        }
+
+
+                        $('#tbl_borrower_group').append('<tr style="height: 10px">\n\
+                                    <td style="font-size: x-small;font-weight: bold;text-align: center">' + data[i].name + '</td>\n\
+                                    <td style="font-size: x-small;font-weight: bold;text-align: center">' + data[i].memberCount + '</td>\n\
+                                    <td style="font-size: x-small;font-weight: bold;text-align: center">' + day + '</td>\n\
+                                    <td style="font-size: x-small;font-weight: bold;text-align: center">' + data[i].regDate + '</td>\n\
+                                    <td style="font-size: x-small;font-weight: bold;text-align: center">' + data[i].regBy + '</td>\n\
+                                    <td style="font-size: x-small;font-weight: bold;text-align: center">' + data[i].status + '</td>\n\
+                                    <td style="font-size: x-small;font-weight: bold;text-align: center"><button class="btn btn-small" style="font-size: x-small;height: 10px;font-weight: bold;">Modify</button></td>\n\
+                                    </tr>');
+
+                    }
+                }
+
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                noty(
+                    {
+                        text: 'Error!\n can not load groups \n try again with refreshing page.',
+                        layout: 'topRight',
+                        type: 'error'
+                    }
+                );
+            },
+            beforeSend: function (xhr) {
+
+            },
+        });
+    },
 }

@@ -37,7 +37,7 @@
     <script type="text/javascript" src="assets/js/pages/datatables_advanced.js"></script>
     <%--<!-- /theme JS files -->--%>
 </head>
-<body onload="">
+<body onload="MEM_GROUP.allGroups();">
 <!-- Main navbar -->
 <jsp:include page="common/main_top_nav.jsp"/>
 <!-- /main navbar -->
@@ -79,11 +79,12 @@
                             <thead>
                             <tr>
                                 <th style="font-size: small">Group Name</th>
-                                <th style="font-size: small">Area</th>
                                 <th style="font-size: small">Members Count</th>
+                                <th style="font-size: small">Collection Day</th>
                                 <th style="font-size: small">Reg.Date</th>
                                 <th style="font-size: small">Reg.By</th>
                                 <th style="font-size: small">Status</th>
+                                <th style="font-size: small">Action</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -111,6 +112,6 @@
 <script type='text/javascript' src='noty/layouts/topLeft.js'></script>
 <script type='text/javascript' src='noty/layouts/topRight.js'></script>
 <script type='text/javascript' src='noty/themes/default.js'></script>
-<script type="text/javascript" src="app/js/Borrower.js"></script>
+<script type="text/javascript" src="app/js/MemberGroup.js"></script>
 </body>
 </html>

@@ -166,6 +166,8 @@ public class Staff_Service_Impl implements Staff_Service {
         memberGroup.setMemberCount(dto.getMemberCount());
         memberGroup.setName(dto.getName() + "-" + dto.getArea());
         memberGroup.setRergDate(dateFormat.format(date));
+        memberGroup.setStatus(dto.getStatus());
+        memberGroup.setRegby(userRepository.findByNameEquals(dto.getRegBy()));
         memberGroup.setUser(userRepository.findByNameEquals(dto.getCollector()));
         MemberGroup save = groupRepository.save(memberGroup);
         if (save != null) {
@@ -179,6 +181,29 @@ public class Staff_Service_Impl implements Staff_Service {
         }
         LOG.info("[APP-STAFF-SERVICE-MEMBER-GROUP-REGISTRATION] - Stop group registration");
         return responseDto;
+    }
+
+    @Override
+    public List<MemberGroupDto> allGroupList() {
+        LOG.info("[APP-STAFF-SERVICE-MEMBER-GROUP-LIST] - getting all groups");
+        List<MemberGroupDto> list = new ArrayList<>();
+        MemberGroupDto dto = null;
+        for (MemberGroup group : groupRepository.findAll()) {
+            dto = new MemberGroupDto();
+            dto.setArea(group.getArea());
+            dto.setCollectionDay(group.getCollectionDay());
+            dto.setCollector(group.getUser().getName());
+            dto.setDescription(group.getDescription());
+            dto.setMemberCount(group.getMemberCount());
+            dto.setName(group.getName());
+            dto.setMGID(group.getMGID());
+            dto.setStatus(group.getStatus());
+            dto.setRegDate(group.getRergDate());
+            dto.setRegBy(group.getRegby().getName());
+            list.add(dto);
+        }
+        LOG.info("[APP-STAFF-SERVICE-MEMBER-GROUP-LIST] - returning group list");
+        return list;
     }
 
     private Borrower setBorrowerModal(BorrowerDto borrowerDto) {

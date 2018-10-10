@@ -40,18 +40,22 @@ public class User implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_role")
     private Role role;
-
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "registeredby", fetch = FetchType.LAZY)
     private List<Borrower> borrowers = new ArrayList<>();
+
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "officer", fetch = FetchType.LAZY)
     private List<Loan> loanList = new ArrayList<>();
 
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "regby", fetch = FetchType.LAZY)
+    private List<MemberGroup> registerdGroup = new ArrayList<>();
+
     public User() {
     }
 
-    public User(String name, String password, String contact, String last_login, String last_logout, String active, Role role, List<Borrower> borrowers, List<Loan> loanList) {
+    public User(String name, String password, String contact, String last_login, String last_logout, String active, Role role, List<Borrower> borrowers, List<Loan> loanList, List<MemberGroup> registerdGroup) {
         this.name = name;
         this.password = password;
         this.contact = contact;
@@ -61,6 +65,15 @@ public class User implements Serializable {
         this.role = role;
         this.borrowers = borrowers;
         this.loanList = loanList;
+        this.registerdGroup = registerdGroup;
+    }
+
+    public List<MemberGroup> getRegisterdGroup() {
+        return registerdGroup;
+    }
+
+    public void setRegisterdGroup(List<MemberGroup> registerdGroup) {
+        this.registerdGroup = registerdGroup;
     }
 
     public List<Loan> getLoanList() {
@@ -159,6 +172,7 @@ public class User implements Serializable {
         sb.append(", role=").append(role);
         sb.append(", borrowers=").append(borrowers);
         sb.append(", loanList=").append(loanList);
+        sb.append(", registerdGroup=").append(registerdGroup);
         sb.append('}');
         return sb.toString();
     }

@@ -23,4 +23,6 @@ public interface Staff_Service {
     public BorrowerDto checkBorrowerID(String id);
 
     public ResponseDto saveMemberGroup(MemberGroupDto dto);
+
+    public List<MemberGroupDto> allGroupList();
 }

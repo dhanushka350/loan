@@ -80,6 +80,13 @@ public class ViewController {
         return new ModelAndView("approve_loans");
     }
 
+    // settings
+
+    @GetMapping(value = "/settings/loans")
+    @ResponseBody
+    public ModelAndView loanSettings() {
+        return new ModelAndView("loan_settings");
+    }
 
     // error pages
     @GetMapping(value = "/error/offline")
@@ -87,4 +94,5 @@ public class ViewController {
     public ModelAndView offline() {
         return new ModelAndView("error_offline");
     }
+
 }
