@@ -149,6 +149,9 @@ public class Staff_Service_Impl implements Staff_Service {
             dto.setCity(borrower.getCity());
             dto.setBusiness(borrower.getBusiness());
             dto.setAddress(borrower.getAddress());
+            dto.setRegisteredby(borrower.getRegisteredby().getName());
+            dto.setRegdate(borrower.getRegdate());
+            dto.setGroup(borrower.getGroup().getMGID());
         }
         return dto;
     }
@@ -203,6 +206,47 @@ public class Staff_Service_Impl implements Staff_Service {
             list.add(dto);
         }
         LOG.info("[APP-STAFF-SERVICE-MEMBER-GROUP-LIST] - returning group list");
+        return list;
+    }
+
+    @Override
+    public MemberGroupDto getGroupByID(int id) {
+        LOG.info("[APP-STAFF-SERVICE-MEMBER-GROUP-LIST] - searching group using id - " + id);
+        MemberGroupDto dto = null;
+        MemberGroup one = groupRepository.getOne(id);
+        if (one != null) {
+            dto = new MemberGroupDto();
+            dto.setRegDate(one.getRergDate());
+            dto.setRegBy(one.getRegby().getName());
+            dto.setStatus(one.getStatus());
+            dto.setMGID(one.getMGID());
+            dto.setName(one.getName());
+            dto.setMemberCount(one.getMemberCount());
+            dto.setDescription(one.getDescription());
+            dto.setCollector(one.getUser().getName());
+            dto.setCollectionDay(one.getCollectionDay());
+            dto.setArea(one.getArea());
+        }
+        return dto;
+    }
+
+    @Override
+    public List<ResponseDto> getGroupMembersByID(int id) {
+        LOG.info("[APP-STAFF-SERVICE-GET-BORROWERS-BY-GROUP-ID] - searching using id - " + id);
+        List<ResponseDto> list = new ArrayList<>();
+        ResponseDto dto = null;
+        MemberGroup one = groupRepository.getOne(id);
+        if (one != null) {
+            LOG.info("[APP-STAFF-SERVICE-GET-BORROWERS-BY-GROUP-ID] - found member group");
+            for (Borrower borrower : one.getBorrowers()) {
+                dto = new ResponseDto();
+                dto.setStatus(Integer.parseInt(borrower.getUniqueID().split("V")[0]));
+                dto.setMessage(borrower.getTitle() + " " + borrower.getFname());
+                list.add(dto);
+            }
+
+        }
+        LOG.info("[APP-STAFF-SERVICE-GET-BORROWERS-BY-GROUP-ID] - returning  " + one.getBorrowers().size() + " member's details");
         return list;
     }
 

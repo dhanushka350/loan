@@ -45,8 +45,20 @@ public class User implements Serializable {
     private List<Borrower> borrowers = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "officer", fetch = FetchType.LAZY)
-    private List<Loan> loanList = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "addedOfficer", fetch = FetchType.LAZY)
+    private List<Loan> addedList = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "primaryApprovalOfficer", fetch = FetchType.LAZY)
+    private List<Loan> PrimaryApprovalList = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "secondaryApprovalOfficer", fetch = FetchType.LAZY)
+    private List<Loan> secondaryApprovalList = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "loanReleaseOfficer", fetch = FetchType.LAZY)
+    private List<Loan> releasedList = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "regby", fetch = FetchType.LAZY)
@@ -55,7 +67,7 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(String name, String password, String contact, String last_login, String last_logout, String active, Role role, List<Borrower> borrowers, List<Loan> loanList, List<MemberGroup> registerdGroup) {
+    public User(String name, String password, String contact, String last_login, String last_logout, String active, Role role, List<Borrower> borrowers, List<Loan> addedList, List<Loan> primaryApprovalList, List<Loan> secondaryApprovalList, List<Loan> releasedList, List<MemberGroup> registerdGroup) {
         this.name = name;
         this.password = password;
         this.contact = contact;
@@ -64,32 +76,11 @@ public class User implements Serializable {
         this.active = active;
         this.role = role;
         this.borrowers = borrowers;
-        this.loanList = loanList;
+        this.addedList = addedList;
+        PrimaryApprovalList = primaryApprovalList;
+        this.secondaryApprovalList = secondaryApprovalList;
+        this.releasedList = releasedList;
         this.registerdGroup = registerdGroup;
-    }
-
-    public List<MemberGroup> getRegisterdGroup() {
-        return registerdGroup;
-    }
-
-    public void setRegisterdGroup(List<MemberGroup> registerdGroup) {
-        this.registerdGroup = registerdGroup;
-    }
-
-    public List<Loan> getLoanList() {
-        return loanList;
-    }
-
-    public void setLoanList(List<Loan> loanList) {
-        this.loanList = loanList;
-    }
-
-    public List<Borrower> getBorrowers() {
-        return borrowers;
-    }
-
-    public void setBorrowers(List<Borrower> borrowers) {
-        this.borrowers = borrowers;
     }
 
     public int getId() {
@@ -141,9 +132,6 @@ public class User implements Serializable {
     }
 
     public String getActive() {
-        if (this.active == null) {
-            this.active = "INACTIVE";
-        }
         return active;
     }
 
@@ -159,6 +147,54 @@ public class User implements Serializable {
         this.role = role;
     }
 
+    public List<Borrower> getBorrowers() {
+        return borrowers;
+    }
+
+    public void setBorrowers(List<Borrower> borrowers) {
+        this.borrowers = borrowers;
+    }
+
+    public List<Loan> getAddedList() {
+        return addedList;
+    }
+
+    public void setAddedList(List<Loan> addedList) {
+        this.addedList = addedList;
+    }
+
+    public List<Loan> getPrimaryApprovalList() {
+        return PrimaryApprovalList;
+    }
+
+    public void setPrimaryApprovalList(List<Loan> primaryApprovalList) {
+        PrimaryApprovalList = primaryApprovalList;
+    }
+
+    public List<Loan> getSecondaryApprovalList() {
+        return secondaryApprovalList;
+    }
+
+    public void setSecondaryApprovalList(List<Loan> secondaryApprovalList) {
+        this.secondaryApprovalList = secondaryApprovalList;
+    }
+
+    public List<Loan> getReleasedList() {
+        return releasedList;
+    }
+
+    public void setReleasedList(List<Loan> releasedList) {
+        this.releasedList = releasedList;
+    }
+
+    public List<MemberGroup> getRegisterdGroup() {
+        return registerdGroup;
+    }
+
+    public void setRegisterdGroup(List<MemberGroup> registerdGroup) {
+        this.registerdGroup = registerdGroup;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("User{");
@@ -171,7 +207,10 @@ public class User implements Serializable {
         sb.append(", active='").append(active).append('\'');
         sb.append(", role=").append(role);
         sb.append(", borrowers=").append(borrowers);
-        sb.append(", loanList=").append(loanList);
+        sb.append(", addedList=").append(addedList);
+        sb.append(", PrimaryApprovalList=").append(PrimaryApprovalList);
+        sb.append(", secondaryApprovalList=").append(secondaryApprovalList);
+        sb.append(", releasedList=").append(releasedList);
         sb.append(", registerdGroup=").append(registerdGroup);
         sb.append('}');
         return sb.toString();

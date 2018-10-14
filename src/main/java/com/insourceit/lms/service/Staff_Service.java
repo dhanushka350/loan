@@ -25,4 +25,10 @@ public interface Staff_Service {
     public ResponseDto saveMemberGroup(MemberGroupDto dto);
 
     public List<MemberGroupDto> allGroupList();
+
+    public MemberGroupDto getGroupByID(int id);
+
+    public List<ResponseDto> getGroupMembersByID(int id);
+
+
 }

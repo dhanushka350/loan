@@ -15,8 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -37,20 +40,154 @@ public class LoanServiceImpl implements LoanService {
     @Transactional
     @Override
     public ResponseDto saveLoan(LoanDto dto) {
-        LOG.info("[APP-LOAN-SERVICE] - add new loan" + dto.getDisbursed());
+        LOG.info("[APP-LOAN-SERVICE-ADD-LOAN] - add new loan for - " + dto.getBorrower());
+        Date date = new Date();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         ResponseDto responseDto = new ResponseDto();
         Loan loan = new Loan();
+
+        loan.setType(loanTypeRepository.getOne(Integer.parseInt(dto.getType())));
         loan.setBorrower(borrowerRepository.getByUniqueID(dto.getBorrower()));
-        loan.setDescription(dto.getDesc());
-        loan.setDisbursed(dto.getDisbursed());
-        loan.setOfficer(userRepository.findByNameEquals(dto.getOfficer()));
-        loan.setRelease(dto.getDate());
-        loan.setStatus(dto.getStatus());
-        loan.setType(loanTypeRepository.getOne(dto.getLoanType()));
-        loan = loanRepository.save(loan);
-        makeLoanRepaymentDates(loan);
-        responseDto.setMessage("Successfully Added.");
-        responseDto.setStatus(1);
+        loan.setDescription(dto.getDescription());
+        loan.setStatus("WAITING FOR APPROVALS");
+        loan.setAddedOfficer(userRepository.findByNameEquals(dto.getAddedOfficer()));
+        loan.setAddedDate(dateFormat.format(date));
+        loan.setLoanID(dto.getLoanID());
+
+        LOG.info("[APP-LOAN-SERVICE-ADD-LOAN] - object created");
+        Loan save = loanRepository.save(loan);
+        LOG.info("[APP-LOAN-SERVICE-ADD-LOAN] - saved.. returning response");
+
+        if (save != null) {
+            responseDto.setMessage("Successfully Added. \n waiting for approvals.");
+            responseDto.setStatus(1);
+        } else {
+            responseDto.setMessage("Can not add this loan.. \n Request not accepted.");
+            responseDto.setStatus(0);
+        }
+
+        return responseDto;
+    }
+
+    @Override
+    public ResponseDto approveLoan(LoanDto dto) {
+        LOG.info("[APP-LOAN-SERVICE-APPROVE-LOAN] - approve loan id - " + dto.getLoanID());
+        Date date = new Date();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        DateFormat timeFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        ResponseDto responseDto = new ResponseDto();
+        Loan loan = loanRepository.findLoanByLoanIDEquals(dto.getLoanID());
+        if (loan != null) {
+            LOG.info("[APP-LOAN-SERVICE-APPROVE-LOAN] - loan found.");
+            if (loan.getPrimaryApprovalOfficer() == null) {
+                loan.setStatus(dto.getStatus());
+                loan.setPrimaryApprovalDate(dateFormat.format(date));
+                loan.setPrimaryApprovalOfficer(userRepository.findByNameEquals(dto.getPrimaryApprovalOfficer()));
+                loan.setDescription(dto.getDescription());
+                Loan approval1 = loanRepository.saveAndFlush(loan);
+                if (approval1 != null) {
+                    if (approval1.getStatus().equalsIgnoreCase("REJECTED")) {
+                        LOG.info("[APP-LOAN-SERVICE-APPROVE-LOAN] - REJECTED LOAN - " + dto.getLoanID());
+                        responseDto.setStatus(3);
+                        responseDto.setMessage("Loan " + dto.getLoanID() + " has been rejected by - " + approval1.getPrimaryApprovalOfficer().getName() + ". \n Terminated loan process at - " + timeFormat.format(date));
+                    } else if (approval1.getStatus().equalsIgnoreCase("HOLD")) {
+                        LOG.info("[APP-LOAN-SERVICE-APPROVE-LOAN] - HOLD LOAN - " + dto.getLoanID());
+                        responseDto.setStatus(2);
+                        responseDto.setMessage("Loan " + dto.getLoanID() + " has been hold by - " + approval1.getPrimaryApprovalOfficer().getName() + ". \n Terminated secondary approval process at - " + timeFormat.format(date));
+                    } else if (approval1.getStatus().equalsIgnoreCase("APPROVED")) {
+                        LOG.info("[APP-LOAN-SERVICE-APPROVE-LOAN] - APPROVED LOAN - " + dto.getLoanID());
+                        responseDto.setStatus(1);
+                        responseDto.setMessage("Loan " + dto.getLoanID() + " has been approved by - " + approval1.getPrimaryApprovalOfficer().getName() + ". \n waiting for secondary approval");
+                    }
+
+                } else {
+                    responseDto.setStatus(0);
+                    responseDto.setMessage("Something went terribly wrong. Please come back later. \n Requesting Developers Support.");
+                }
+            } else {
+                loan.setStatus(dto.getStatus());
+                loan.setSecondaryApprovalDate(dateFormat.format(date));
+                loan.setSecondaryApprovalOfficer(userRepository.findByNameEquals(dto.getPrimaryApprovalOfficer()));
+                loan.setDescription(dto.getDescription());
+                Loan approval1 = loanRepository.saveAndFlush(loan);
+                if (approval1 != null) {
+                    if (approval1.getStatus().equalsIgnoreCase("REJECTED")) {
+                        LOG.info("[APP-LOAN-SERVICE-APPROVE-LOAN] - REJECTED LOAN - " + dto.getLoanID());
+                        responseDto.setStatus(3);
+                        responseDto.setMessage("Loan " + dto.getLoanID() + " has been rejected by - " + approval1.getSecondaryApprovalOfficer().getName() + ". \n Terminated loan process at - " + timeFormat.format(date));
+                    } else if (approval1.getStatus().equalsIgnoreCase("HOLD")) {
+                        LOG.info("[APP-LOAN-SERVICE-APPROVE-LOAN] - HOLD LOAN - " + dto.getLoanID());
+                        responseDto.setStatus(2);
+                        responseDto.setMessage("Loan " + dto.getLoanID() + " has been hold by - " + approval1.getSecondaryApprovalOfficer().getName() + ". \n Terminated loan release process at - " + timeFormat.format(date));
+                    } else if (approval1.getStatus().equalsIgnoreCase("APPROVED")) {
+                        LOG.info("[APP-LOAN-SERVICE-APPROVE-LOAN] - APPROVED LOAN - " + dto.getLoanID());
+                        responseDto.setStatus(1);
+                        responseDto.setMessage("Loan " + dto.getLoanID() + " has been approved by - " + approval1.getSecondaryApprovalOfficer().getName() + ". \n all approvals are granted.. \n Informing Borrower..");
+                    }
+
+                } else {
+                    responseDto.setStatus(0);
+                    responseDto.setMessage("Something went terribly wrong. Please come back later. \n Requesting Developers Support.");
+                }
+            }
+        } else {
+            responseDto.setStatus(0);
+            responseDto.setMessage("Can not find this loan. \n make sure loan id is correct and try again.");
+        }
+
+        return responseDto;
+    }
+
+    @Override
+    @Transactional
+    public ResponseDto releasingLoan(LoanDto dto) {
+        LOG.info("[APP-LOAN-SERVICE-RELEASING-LOAN] - releasing loan - " + dto.getLoanID());
+        Date date = new Date();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        ResponseDto responseDto = new ResponseDto();
+        Loan loan = loanRepository.findLoanByLoanIDEquals(dto.getLoanID());
+
+        if (loan != null && loan.getStatus().equalsIgnoreCase("APPROVED")) {
+            loan.setDocCharge(dto.getDocCharge());
+            loan.setInsuranceCharge(dto.getInsuranceCharge());
+            loan.setPaymentMethod(dto.getPaymentMethod());
+            loan.setLoanReleaseOfficer(userRepository.findByNameEquals(dto.getLoanReleaseOfficer()));
+            loan.setRelease(dateFormat.format(date));
+            loan.setStatus("ON GOING");
+            Loan flush = loanRepository.saveAndFlush(loan);
+            if (flush != null) {
+                makeLoanRepaymentDates(flush);
+                LOG.info("[APP-LOAN-SERVICE-RELEASE-LOAN] - RELEASED LOAN - " + dto.getLoanID());
+                responseDto.setStatus(1);
+                responseDto.setMessage("Loan Released..");
+            } else {
+                LOG.info("[APP-LOAN-SERVICE-RELEASE-LOAN] - REJECTED BY THE SYSTEM LOAN - " + dto.getLoanID());
+                responseDto.setStatus(0);
+                responseDto.setMessage("REJECTED BY THE SYSTEM \n Something went terribly wrong. Stopping releasing loan. \n Please come back later. \n Requesting Developers Support.");
+            }
+        } else {
+            LOG.info("[APP-LOAN-SERVICE-RELEASE-LOAN] -  LOAN NOT APPROVED - " + dto.getLoanID());
+            responseDto.setStatus(2);
+            responseDto.setMessage("This loan not approved. Stopping releasing loan. \n Please come back later.");
+        }
+        return responseDto;
+    }
+
+    @Override
+    public ResponseDto checkBorrowerQualifications(String id) {
+        LOG.info("[APP-LOAN-SERVICE-CHECKING-BORROWER-QUALIFICATION] borrower id +" + id);
+        ResponseDto responseDto = new ResponseDto();
+        Loan on_going = loanRepository.findFirstByBorrowerEqualsAndStatusEquals(borrowerRepository.getByUniqueID(id), "ON GOING");
+        if (on_going != null) {
+            LOG.info("[APP-LOAN-SERVICE-CHECKING-BORROWER-QUALIFICATION] Found Some Ongoing Loan(s).." + on_going.getLoanID());
+            responseDto.setStatus(0);
+            responseDto.setMessage("Found Some Ongoing Loan(s). \n check loan ID - " + on_going.getLoanID());
+        } else {
+            LOG.info("[APP-LOAN-SERVICE-CHECKING-BORROWER-QUALIFICATION] Clear Person.");
+            responseDto.setStatus(1);
+            responseDto.setMessage("Person Accepted.");
+        }
+        LOG.info("[APP-LOAN-SERVICE-CHECKING-BORROWER-QUALIFICATION] Returning Response.");
         return responseDto;
     }
 
@@ -102,8 +239,45 @@ public class LoanServiceImpl implements LoanService {
             dto.setCharge(one.getCharge());
             dto.setDuration(one.getDuration());
             dto.setInterest(one.getInterest());
+            dto.setDocumentCharge(one.getDocumentCharge());
+            dto.setInsuranceCharge(one.getInsuranceCharge());
+            System.out.println(dto.getDocumentCharge());
         }
         return dto;
+    }
+
+    @Override
+    public List<LoanDto> getBorrowerLoansByNIC(String nic) {
+        LOG.info("[APP-LOAN-SERVICE-GET-LOAN-LIST-BY-NIC] - finding loans using nic - " + nic);
+        List<LoanDto> list = new ArrayList<>();
+        LoanDto dto = null;
+        for (Loan loan : borrowerRepository.getByUniqueID(nic).getBorrowedLoans()) {
+            dto = new LoanDto();
+            try {
+                dto.setAddedDate(loan.getAddedDate());
+                dto.setAddedOfficer(loan.getAddedOfficer().getName());
+                dto.setBorrower(loan.getBorrower().getUniqueID());
+                dto.setStatus(loan.getStatus());
+                dto.setType(loan.getType().getType());
+                dto.setDescription(loan.getDescription());
+                dto.setLID(loan.getLID());
+                dto.setLoanID(loan.getLoanID());
+                dto.setPrimaryApprovalDate(loan.getPrimaryApprovalDate());
+                dto.setPrimaryApprovalOfficer(loan.getPrimaryApprovalOfficer().getName());
+                dto.setSecondaryApprovalDate(loan.getSecondaryApprovalDate());
+                dto.setSecondaryApprovalOfficer(loan.getSecondaryApprovalOfficer().getName());
+                dto.setDocCharge(loan.getDocCharge());
+                dto.setInsuranceCharge(loan.getInsuranceCharge());
+                dto.setLoanReleaseOfficer(loan.getLoanReleaseOfficer().getName());
+                dto.setPaymentMethod(loan.getPaymentMethod());
+                dto.setRelease(loan.getRelease());
+            } catch (NullPointerException e) {
+                LOG.info("[APP-LOAN-SERVICE-GET-LOAN-LIST-BY-NIC] - some data can be null here.. it's not a bug..");
+            }
+            list.add(dto);
+        }
+        LOG.info("[APP-LOAN-SERVICE-GET-LOAN-LIST-BY-NIC] - returning result");
+        return list;
     }
 
     private void makeLoanRepaymentDates(Loan loan) {

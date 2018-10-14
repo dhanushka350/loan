@@ -26,6 +26,10 @@ public class LoanType implements Serializable {
     private String charge;
     @Column(name = "t_loan_type_duration")
     private String duration;
+    @Column(name = "t_loan_document_charge")
+    private Double documentCharge;
+    @Column(name = "t_loan_insurance_charge")
+    private Double insuranceCharge;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "type", fetch = FetchType.LAZY)
     private List<Loan> loans = new ArrayList<>();
@@ -33,14 +37,20 @@ public class LoanType implements Serializable {
     public LoanType() {
     }
 
-    public LoanType(int ID, String type, String amount, String interest, String charge, String duration, List<Loan> loans) {
-        this.ID = ID;
-        this.type = type;
-        this.amount = amount;
-        this.interest = interest;
-        this.charge = charge;
-        this.duration = duration;
-        this.loans = loans;
+    public Double getDocumentCharge() {
+        return documentCharge;
+    }
+
+    public void setDocumentCharge(Double documentCharge) {
+        this.documentCharge = documentCharge;
+    }
+
+    public Double getInsuranceCharge() {
+        return insuranceCharge;
+    }
+
+    public void setInsuranceCharge(Double insuranceCharge) {
+        this.insuranceCharge = insuranceCharge;
     }
 
     public int getID() {

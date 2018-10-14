@@ -44,7 +44,7 @@
 
     <!-- /theme JS files -->
 </head>
-<body onload="LOAN.allBorrowers();LOAN.allLoanTypes();">
+<body onload="LOAN.allBorrowers();LOAN.allLoanTypes();" class="sidebar-xs has-detached-left">
 
 <!-- Main navbar -->
 <jsp:include page="common/main_top_nav.jsp"/>
@@ -82,10 +82,29 @@
                     <form class="form-horizontal form-validate-jquery">
                         <fieldset class="content-group">
                             <legend class="text-bold">Add Loan
-                                <small class="display-block" style="text-align: right"><a href="/admin_dash">Help</a>
+                                <small style="text-align: center; color: red;display: none"
+                                       id="stop_loan_process">
+                                    <legend class="text-bold">sorry</legend>
+                                    PLEASE NOTE :- This borrower has unfinished loan. We can not process this request
+                                    until he/she
+                                    finish
+                                    payments of ongoing loan.
+                                </small>
+                                <small class="display-block" style="text-align: right"><a href="/borrower_details">Borrower Details and Loan History</a>
                                 </small>
                             </legend>
                             <!-- Basic text input -->
+                            <div class="form-group">
+                                <label class="control-label col-lg-3">Borrower</label>
+                                <div class="col-lg-9">
+                                    <div class="form-group">
+                                        <select class="select-search" id="borrower"
+                                                onchange="LOAN.checkQualifications();">
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label class="control-label col-lg-3">Loan Product</label>
                                 <div class="col-lg-9">
@@ -95,106 +114,91 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="control-label col-lg-3">Borrower</label>
-                                <div class="col-lg-9">
-                                    <div class="form-group">
-                                        <select class="select-search" id="borrower">
-
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <legend class="text-bold">Loan terms (required fields):</legend>
-                            <div class="form-group">
-                                <label class="control-label col-lg-3"></label>
-                                <div class="col-lg-2 form-group">
+                            <legend class="text-bold stop">Loan terms :</legend>
+                            <div class="form-group stop">
+                                <label class="control-label col-lg-2">
                                     <small class="display-block text-bold col-lg-12" style="color: red">Principle Amount
-                                        :
                                     </small>
-                                </div>
-                                <div class="col-lg-2 form-group">
+                                </label>
+                                <div class="col-lg-2 form-group stop">
                                     <input type="text" id="principleAmount" name="basic" class="form-control col-lg-12"
                                            placeholder="Principal Amount"
-                                           style="text-align: center; background-color: transparent;color: black;font-weight: bold;"
+                                           style="text-align: center; background-color: transparent;color: black;font-weight: bold;
+                                           background-color: transparent; border: none;"
                                            disabled="disabled">
                                 </div>
-                                <div class="col-lg-2 form-group">
-                                    <small class="display-block text-bold col-lg-12" style="color: red">Interest :
+                                <label class="control-label col-lg-2 stop">
+                                    <small class="display-block text-bold col-lg-12" style="color: red">Interest
                                     </small>
-                                </div>
-                                <div class="col-lg-2 form-group">
+                                </label>
+                                <div class="col-lg-2 form-group stop">
                                     <input type="text" id="interest" name="basic" class="form-control col-lg-12"
                                            placeholder="Interest"
-                                           style="text-align: center; background-color: transparent;color: black;font-weight: bold;"
+                                           style="text-align: center; background-color: transparent;color: black;font-weight: bold;
+                                                background-color: transparent; border: none;"
                                            disabled="disabled">
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-lg-3"></label>
-                                <div class="col-lg-2 form-group">
+                                <label class="control-label col-lg-2 stop">
                                     <small class="display-block text-bold col-lg-12" style="color: red">Duration
-                                        (weeks):
+                                        (weeks)
                                     </small>
-                                </div>
-                                <div class="col-lg-2 form-group">
+                                </label>
+                                <div class="col-lg-2 form-group stop">
                                     <input type="text" id="duration" name="basic" class="form-control col-lg-12"
                                            placeholder="Duration"
-                                           style="text-align: center; background-color: transparent;color: black;font-weight: bold;"
-                                           disabled="disabled">
-                                </div>
-                                <div class="col-lg-2 form-group">
-                                    <small class="display-block text-bold col-lg-12" style="color: red">Weekly Charge :
-                                    </small>
-                                </div>
-                                <div class="col-lg-2 form-group">
-                                    <input type="text" id="charge" name="basic" class="form-control col-lg-12"
-                                           placeholder="Charge"
-                                           style="text-align: center; background-color: transparent;color: black;font-weight: bold;"
+                                           style="text-align: center; background-color: transparent;color: black;font-weight: bold;
+                                           background-color: transparent; border: none;"
                                            disabled="disabled">
                                 </div>
                             </div>
-                            <%--<div class="form-group">--%>
-                                <%--<label class="control-label col-lg-3">Disbursed By </label>--%>
-                                <%--<div class="col-lg-9">--%>
-                                    <%--<select name="default_select" class="form-control" required="required"--%>
-                                            <%--id="disbursed">--%>
-                                        <%--<option value="Cash">Cash</option>--%>
-                                        <%--<option value="Cheque">Cheque</option>--%>
-                                        <%--<option value="Wire_Transfer">Wire Transfer</option>--%>
-                                        <%--<option value="Online_Transfer">Online Transfer</option>--%>
-                                    <%--</select>--%>
-                                <%--</div>--%>
-                            <%--</div>--%>
-                            <%--<div class="form-group" id="dates" style="border-color: red;">--%>
 
-                            <%--</div>--%>
-                            <%--<legend class="text-bold">Loan Status :</legend>--%>
-                            <%--<div class="form-group">--%>
-                                <%--<label class="control-label col-lg-3">Loan Status</label>--%>
-                                <%--<div class="col-lg-9">--%>
-                                    <%--<select name="default_select" class="form-control" required="required" id="status">--%>
-                                        <%--<option value="Processing">Processing</option>--%>
-                                        <%--<option value="Open">Approved</option>--%>
-                                        <%--<option value="Denied">Denied</option>--%>
-                                        <%--<option value="NTU">Not Taken Up</option>--%>
-                                    <%--</select>--%>
-                                <%--</div>--%>
-                            <%--</div>--%>
-                            <%--<legend class="text-bold">Other (optional) :</legend>--%>
-                            <div class="form-group">
-                                <label class="control-label col-lg-3">Description</label>
-                                <div class="col-lg-9">
+                            <div class="form-group stop">
+                                <label class="control-label col-lg-2">
+                                    <small class="display-block text-bold col-lg-12" style="color: red">Weekly Charge
+                                    </small>
+                                </label>
+                                <div class="col-lg-2 form-group">
+                                    <input type="text" id="charge" name="basic" class="form-control col-lg-12"
+                                           placeholder="Weekly Charge"
+                                           style="text-align: center; background-color: transparent;color: black;font-weight: bold;
+                                           background-color: transparent; border: none;"
+                                           disabled="disabled">
+                                </div>
+                                <label class="control-label col-lg-2">
+                                    <small class="display-block text-bold col-lg-12" style="color: red">Document Fee
+                                    </small>
+                                </label>
+                                <div class="col-lg-2 form-group">
+                                    <input type="text" id="doc_fee" name="basic" class="form-control col-lg-12"
+                                           placeholder="Document Fee"
+                                           style="text-align: center; background-color: transparent;color: black;font-weight: bold;
+                                                background-color: transparent; border: none;"
+                                           disabled="disabled">
+                                </div>
+                                <label class="control-label col-lg-2">
+                                    <small class="display-block text-bold col-lg-12" style="color: red">Insurance Fee
+                                    </small>
+                                </label>
+                                <div class="col-lg-2 form-group">
+                                    <input type="text" id="insurance_fee" name="basic" class="form-control col-lg-12"
+                                           placeholder="Insurance Fee"
+                                           style="text-align: center; background-color: transparent;color: black;font-weight: bold;
+                                           background-color: transparent; border: none;"
+                                           disabled="disabled">
+                                </div>
+                            </div>
+                            <div class="form-group stop">
+                                <div class="col-lg-12">
                                     <textarea type="text" name="basic" class="form-control"
                                               placeholder="Description" id="desc"></textarea>
                                 </div>
                             </div>
                         </fieldset>
                         <legend class="text-bold"></legend>
-                        <div class="text-right">
+                        <div class="text-right stop">
                             <button type="reset" class="btn btn-default" id="reset">Reset <i
                                     class="icon-reload-alt position-right"></i></button>
-                            <button type="button" class="btn btn-primary" id="saveLoan">Send for approvel <i
+                            <button type="button" class="btn btn-primary" id="saveLoan">Send for approval <i
                                     class="icon-arrow-right14 position-right"></i></button>
                         </div>
                     </form>

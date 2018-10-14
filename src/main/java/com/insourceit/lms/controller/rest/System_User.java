@@ -1,5 +1,6 @@
 package com.insourceit.lms.controller.rest;
 
+import com.insourceit.lms.dto.LoanTypeDto;
 import com.insourceit.lms.dto.MemberGroupDto;
 import com.insourceit.lms.dto.ResponseDto;
 import com.insourceit.lms.dto.UserLogin;
@@ -61,5 +62,19 @@ public class System_User {
     private List<MemberGroupDto> groupList() {
         LOG.info("[APP-API-REST-CONTROLLER-STAFF-GROUP-LIST]");
         return userService.allGroupList();
+    }
+
+    @RequestMapping(value = {"/groupDetails"}, method = RequestMethod.GET)
+    @ResponseBody
+    private MemberGroupDto loanTypeDetails(@RequestParam int id) {
+        LOG.info("[APP-API-REST-CONTROLLER-GROUP-DETAILS] for id - " + id);
+        return userService.getGroupByID(id);
+    }
+
+    @RequestMapping(value = {"/group/members_details"}, method = RequestMethod.GET)
+    @ResponseBody
+    private List<ResponseDto> groupMembersByGroupId(@RequestParam int id) {
+        LOG.info("[APP-API-REST-CONTROLLER-GROUP-MEMBERS-DETAILS] for id - " + id);
+        return userService.getGroupMembersByID(id);
     }
 }

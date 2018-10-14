@@ -44,7 +44,7 @@
 
     <!-- /theme JS files -->
 </head>
-<body onload="">
+<body onload="" class="sidebar-xs has-detached-left">
 
 <!-- Main navbar -->
 <jsp:include page="common/main_top_nav.jsp"/>

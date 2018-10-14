@@ -37,7 +37,7 @@
     <script type="text/javascript" src="assets/js/pages/datatables_advanced.js"></script>
     <%--<!-- /theme JS files -->--%>
 </head>
-<body onload="">
+<body onload="" class="sidebar-xs has-detached-left">
 <!-- Main navbar -->
 <jsp:include page="common/main_top_nav.jsp"/>
 <!-- /main navbar -->

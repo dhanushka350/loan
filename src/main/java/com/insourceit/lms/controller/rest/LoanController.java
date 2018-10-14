@@ -28,6 +28,20 @@ public class LoanController {
         return loanService.saveLoan(dto);
     }
 
+    @RequestMapping(value = {"/approve"}, method = RequestMethod.POST)
+    @ResponseBody
+    private ResponseDto approveLoan(@RequestBody LoanDto dto) {
+        LOG.info("[APP-API-REST-CONTROLLER-LOAN-APPROVE]");
+        return loanService.approveLoan(dto);
+    }
+
+    @RequestMapping(value = {"/release"}, method = RequestMethod.POST)
+    @ResponseBody
+    private ResponseDto releasingLoan(@RequestBody LoanDto dto) {
+        LOG.info("[APP-API-REST-CONTROLLER-LOAN-RELEASING]");
+        return loanService.releasingLoan(dto);
+    }
+
     @RequestMapping(value = {"/generated/payments/dates"}, method = RequestMethod.GET)
     @ResponseBody
     private List<PaymentDates> loanDatesForWeeklyPayment(@RequestParam int loan, @RequestParam int duration) {
@@ -48,5 +62,19 @@ public class LoanController {
         System.out.println();
         LOG.info("[APP-API-REST-CONTROLLER-LOAN-TYPE-DETAILS] for id - " + id);
         return loanService.getLoanTypeDetails(Integer.parseInt(id));
+    }
+
+    @RequestMapping(value = {"/check/qualifications"}, method = RequestMethod.GET)
+    @ResponseBody
+    private ResponseDto checkBorrowerQualifications(@RequestParam String id) {
+        LOG.info("[APP-API-REST-CONTROLLER-CHECK-QUALIFICATIONS] for id - " + id);
+        return loanService.checkBorrowerQualifications(id);
+    }
+
+    @RequestMapping(value = {"/get_loans/by/nic"}, method = RequestMethod.GET)
+    @ResponseBody
+    private List<LoanDto> getLoanListByNic(@RequestParam String nic) {
+        LOG.info("[APP-LOAN-SERVICE-GET-LOAN-LIST-BY-NIC] for nic - " + nic);
+        return loanService.getBorrowerLoansByNIC(nic);
     }
 }

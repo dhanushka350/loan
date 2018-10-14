@@ -39,7 +39,7 @@
     <script type="text/javascript" src="/assets/js/pages/form_validation.js"></script>
     <!-- /theme JS files -->
 </head>
-<body>
+<body class="sidebar-xs has-detached-left">
 
 <!-- Main navbar -->
 <jsp:include page="common/main_top_nav.jsp"/>

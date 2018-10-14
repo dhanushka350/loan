@@ -3,6 +3,8 @@ $('#saveLoan').click(function (n) {
     LOAN.addNewUser();
 
 });
+
+
 var LOAN = {
     allBorrowers: function () {
         $.ajax({
@@ -11,6 +13,10 @@ var LOAN = {
             contentType: "application/json",
             type: 'GET',
             success: function (data, textStatus, jqXHR) {
+                $('#borrower').append($('<option>', {
+                    value: 0,
+                    text: "Select Borrower"
+                }));
                 if (data.length <= 0) {
                     noty(
                         {
@@ -138,15 +144,15 @@ var LOAN = {
         });
     },
     getLoanTypeDetails: function () {
-
         $("#principleAmount").val("");
         $("#interest").val("");
         $("#duration").val("");
         $("#charge").val("");
+        $("#doc_fee").val("");
+        $("#insurance_fee").val("");
 
         var e = document.getElementById("loanType");
         var sel_loan = parseInt(e.options[e.selectedIndex].value);
-
         if (sel_loan > 0) {
             $.ajax({
                 url: "/api/rest/loan//get/loan_type/details?id=" + sel_loan,
@@ -154,10 +160,13 @@ var LOAN = {
                 contentType: "application/json",
                 type: 'GET',
                 success: function (data, textStatus, jqXHR) {
+
                     $("#principleAmount").val(data.amount);
                     $("#interest").val(data.interest + " %");
                     $("#duration").val(data.duration);
                     $("#charge").val(data.charge);
+                    $("#doc_fee").val(data.documentCharge);
+                    $("#insurance_fee").val(data.insuranceCharge);
                     LOAN.GeneratePaymentDates();
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
@@ -176,26 +185,18 @@ var LOAN = {
         }
     },
     addNewUser: function () {
-        var e = document.getElementById("disbursed");
-        var disbursed = e.options[e.selectedIndex].value;
-
-        var x = document.getElementById("status");
-        var status = x.options[x.selectedIndex].value;
 
         var y = document.getElementById("borrower");
         var borrower = parseInt(y.options[y.selectedIndex].value);
 
         var z = document.getElementById("loanType");
         var type = parseInt(z.options[z.selectedIndex].value);
-        alert(disbursed);
+
         var e = {};
-        e["disbursed"] = disbursed;
-        e["date"] = $('#date').val();
-        e["status"] = status;
-        e["desc"] = $("#desc").val();
+        e["description"] = $("#desc").val();
         e["borrower"] = borrower;
-        e["officer"] = $.session.get("Logged_User");
-        e["loanType"] = type;
+        e["addedOfficer"] = $.session.get("Logged_User");
+        e["type"] = type;
 
         var d = JSON.stringify(e);
 
@@ -215,7 +216,7 @@ var LOAN = {
                 } else {
                     noty(
                         {
-                            text: 'Something went wrong.. \n try again.',
+                            text: data.message,
                             layout: 'topRight',
                             type: 'error'
                         }
@@ -236,5 +237,55 @@ var LOAN = {
 
             }
         });
+    },
+    checkQualifications: function () {
+        var e = document.getElementById("borrower");
+        var sel_loan = parseInt(e.options[e.selectedIndex].value);
+        if (sel_loan > 0) {
+            $.ajax({
+                url: "/api/rest/loan/check/qualifications?id=" + sel_loan,
+                dataType: 'json',
+                contentType: "application/json",
+                type: 'GET',
+                success: function (data, textStatus, jqXHR) {
+
+                    if (data.status === 0) {
+                        noty(
+                            {
+                                text: data.message,
+                                layout: 'topCenter',
+                                type: 'warning'
+                            }
+                        );
+
+                        $(".stop").hide();
+                        $("#stop_loan_process").show();
+
+                    } else if (data.status === 1) {
+                        noty(
+                            {
+                                text: data.message,
+                                layout: 'topCenter',
+                                type: 'information'
+                            }
+                        );
+                        $(".stop").show();
+                        $("#stop_loan_process").hide();
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    noty(
+                        {
+                            text: 'ERROR ! \n Something went terribly wrong.\n Can Not check borrower qualifications. \n Requesting Developers Support.',
+                            layout: 'topRight',
+                            type: 'error'
+                        }
+                    );
+                },
+                beforeSend: function (xhr) {
+
+                }
+            });
+        }
     },
 }

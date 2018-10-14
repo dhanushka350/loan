@@ -12,9 +12,17 @@ public interface LoanService {
 
     public ResponseDto saveLoan(LoanDto dto);
 
+    public ResponseDto approveLoan(LoanDto dto);
+
+    public ResponseDto releasingLoan(LoanDto dto);
+
+    public ResponseDto checkBorrowerQualifications(String id);
+
     public List<PaymentDates> getPaymentDatesForWeeklyPayment(int duration, int loanType);
 
     public List<LoanTypeDto> allLoanTypes();
 
     public LoanTypeDto getLoanTypeDetails(int id);
+
+    public List<LoanDto> getBorrowerLoansByNIC(String nic);
 }

@@ -54,6 +54,12 @@ public class ViewController {
         return new ModelAndView("add_group");
     }
 
+    @GetMapping(value = "/borrower_details")
+    @ResponseBody
+    public ModelAndView borrower_details() {
+        return new ModelAndView("borrower_details");
+    }
+
 
     // Loans
     @GetMapping(value = "/add_loan")

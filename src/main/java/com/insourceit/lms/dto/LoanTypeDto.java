@@ -7,9 +7,27 @@ public class LoanTypeDto {
     private String interest;
     private String duration;
     private String charge;
+    private Double documentCharge;
+    private Double insuranceCharge;
 
 
     public LoanTypeDto() {
+    }
+
+    public Double getDocumentCharge() {
+        return documentCharge;
+    }
+
+    public void setDocumentCharge(Double documentCharge) {
+        this.documentCharge = documentCharge;
+    }
+
+    public Double getInsuranceCharge() {
+        return insuranceCharge;
+    }
+
+    public void setInsuranceCharge(Double insuranceCharge) {
+        this.insuranceCharge = insuranceCharge;
     }
 
     public String getAmount() {
